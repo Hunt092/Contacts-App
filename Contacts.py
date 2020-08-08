@@ -44,7 +44,7 @@ def MakeContact(Name,Numbers,Addresses,Emails):
         Numbers.delete(0, 'end')
         Addresses.delete(0, 'end')
         Emails.delete(0, 'end')
-        
+
 def ClearEntry():
    pass
 
@@ -139,18 +139,18 @@ def OpenScreen():
 
     
     frame= tk.Frame(canvas1,bg='#b3b3b3',relief='raised',bd=1,)
-    frame.place(relx=0.1,rely=0.05,relheight=0.8,relwidth=0.8,)
+    frame.place(relx=0.0,rely=0.0,relheight=0.8,relwidth=1,)
 
-    New = tk.Button(canvas1,text="Make new Contact", padx =15 , pady=15,
+    New = tk.Button(canvas1,text="Make new Contact", pady=10,
                     font= ButtonFont, command= lambda : OpenNewPage(canvas1,Title,NewContact))
-    New.place(relx=0.1125, rely=0.85)
+    New.place(relx=0.025, rely=0.8,relwidth=0.25)
 
-    Edit=  tk.Button(canvas1,text="Edit a Contact", padx =30 , pady=15, 
+    Edit=  tk.Button(canvas1,text="Edit a Contact",  pady=10, 
                     font= ButtonFont, command = lambda :OpenNewPage(canvas1,Title,EditContact))
-    Edit.place(relx=0.65, rely=0.85)
+    Edit.place(relx=0.725, rely=0.8,relwidth=0.25)
 
-    Exit = tk.Button(canvas1,text="Exit", padx =30 , pady=15, font= ButtonFont,command=lambda :root.quit())
-    Exit.place(relx=0.4275,rely=0.875)
+    Exit = tk.Button(canvas1,text="Exit", pady=1, font= ButtonFont,command=lambda :root.quit())
+    Exit.place(relx=0.45,rely=0.9,relwidth=0.10)
 
     scrollbar = tk.Scrollbar(frame)
     scrollbar.pack( side = 'right', fill = 'y' )
@@ -177,6 +177,9 @@ def EditContact():
     SearchButton = tk.Button(text="Edit a Contact", padx =30 , pady=15, 
                     font= ButtonFont,)
     SearchButton.place(relx=0.38,rely=0.6)
+
+    Back =  tk.Button(Canvas,text="Back",padx=20,font=ButtonFont, command = lambda : OpenNewPage(Canvas,Title,OpenScreen))
+    Back.place(relx=0.875,rely=0.01)
 
 if __name__ =='__main__':
     root = tk.Tk()
