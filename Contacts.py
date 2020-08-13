@@ -251,10 +251,8 @@ def SearchContactPage():
 
 
 if __name__ =='__main__':
-    # root = tk.Tk()
-    # root.title("Contacts")
-    # OpenScreen()
+    root = tk.Tk()
+    root.title("Contacts")
+    OpenScreen()
     
-    # root.mainloop()
-
-    ContactList[0].update("Yash",21)
+    root.mainloop()
