@@ -10,7 +10,6 @@ ButtonFont = ('Impact',15,)
 EntryFont = ('Arial', 16)
 TextFont= ('Impact',20,)
 #-----------------#
-i=0
 
 # Opening the Json File if it doesnt exist and empty list is used
 ContactList=[]
@@ -32,23 +31,16 @@ def GetData(name,numbers,addresses,emails):
 def MakeContact(Name,Numbers,Addresses,Emails):
     try:
         name,numbers,addresses,emails = GetData(Name.get().strip(),Numbers.get().strip(),Addresses.get().strip(),Emails.get().strip())
-        Name.delete(0, 'end')
-        Numbers.delete(0, 'end')
-        Addresses.delete(0, 'end')
-        Emails.delete(0, 'end')
-        if emails==['']:
-            emails=[]
+        ClearEntry(Name,Numbers,Addresses,Emails)
         node=Create(name,numbers,addresses,emails)
         SaveContact(node)
     except:
-        Name.delete(0, 'end')
+        ClearEntry(Name,Numbers,Addresses,Emails)
         Name.insert(0,'Enter a name')
-        Numbers.delete(0, 'end')
-        Addresses.delete(0, 'end')
-        Emails.delete(0, 'end')
 
-def ClearEntry():
-   pass
+def ClearEntry(*args):
+    for arg in args:
+        arg.delete(0,'end')
 
 def Create(Name,Numbers,Addresses,Emails):
     contact={} 
@@ -65,27 +57,27 @@ def TakeNumber(numbers):
 def TakeAddress(addresses):
     """ Returns a list of Addresses"""
     try:
-        return [address for address in addresses.split()]
+        return [address for address in addresses.split("  ")]
     except:
         return ["no address"]
 
 def TakeEmail(emails):
     """ Returns a List of Emails"""
     try:
-        return [email for email in emails.split(',')]
+        if len(emails)>0:
+            return [email for email in emails.split(',')]
+        return []
     except:
         return ["no email"]
 
 def SaveContact(Contact,Index=None):
     
     if Index==None:
-        print("Creating New contact")
         ContactList.append(Contact)
     else:
-        print("Updating cOntact")
         ContactList.pop(Index)
         ContactList.insert(Index,Contact)
-    print("Saving....")
+
     with open("ContactList.json", 'w') as f:
         json.dump(ContactList,f)
 
@@ -93,7 +85,6 @@ def OpenNewPage(canvasname,Titlename,NextpageName=None,ContactIndex=None):
     
     canvasname.destroy()
     Titlename.destroy()
-    print(NextpageName)
     if NextpageName!= None and ContactIndex!= None:
         NextpageName(ContactIndex)
     if NextpageName!= None:
@@ -119,30 +110,31 @@ def EditContactPages(canvas1,Title,Index):
 def UpdateContact(Index,Name,Number,Address,Email,TITLE,CANVAS):
 
     name,numbers,addresses,emails = GetData(Name.get().strip(),Number.get().strip(),Address.get().strip(),Email.get().strip())
-    if len(addresses)<1:
-        addresses=[]
-    print(addresses,emails)
     node=Create(name,numbers,addresses,emails)
     SaveContact(node,Index)
     OpenNewPage(CANVAS,TITLE,OpenScreen)
 
 def FindContact(Canvas,Title,Search):
+
     Searchterm=Search.get()
+
     for Index,Contact in enumerate(ContactList):
         for Name in Contact:
             if Name==Searchterm.capitalize() or Name==Searchterm :
                 OpenNewPage(Canvas,Title,Modificationpage,Index)
                 break
     try:
-        Search.delete(0,'end')
+        ClearEntry(Search)
         Search.insert("end","No Contact found")
     except:pass
 
 def DeleteContact(Canvas,Title,Index):
     if Index!=None:
         ContactList.pop(Index)
+
         with open("ContactList.json", 'w') as f:
             json.dump(ContactList,f)
+
         OpenNewPage(Canvas,Title,OpenScreen)
         
 #--------------------------------------#
