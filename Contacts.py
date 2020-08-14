@@ -133,8 +133,18 @@ def FindContact(Canvas,Title,Search):
             if Name==Searchterm.capitalize() or Name==Searchterm :
                 OpenNewPage(Canvas,Title,Modificationpage,Index)
                 break
-    try:Search.insert("end","No Contact found")
+    try:
+        Search.delete(0,'end')
+        Search.insert("end","No Contact found")
     except:pass
+
+def DeleteContact(Canvas,Title,Index):
+    if Index!=None:
+        ContactList.pop(Index)
+        with open("ContactList.json", 'w') as f:
+            json.dump(ContactList,f)
+        OpenNewPage(Canvas,Title,OpenScreen)
+        
 #--------------------------------------#
 
 
@@ -197,6 +207,11 @@ def OpenScreen():
     Edit=  tk.Button(canvas1,text="Edit a Contact",  pady=10, 
                     font= ButtonFont, command = lambda :EditContactPages(canvas1,Title,GetIndex(Appname)))
     Edit.place(relx=0.725, rely=0.8,relwidth=0.25)
+
+    Delete=tk.Button(canvas1,text="Delete Contact",  pady=10, 
+                    font= ButtonFont, command = lambda :DeleteContact(canvas1,Title,GetIndex(Appname)))
+    Delete.place(relx=0.375, rely=0.8,relwidth=0.25)
+
 
     Exit = tk.Button(canvas1,text="Exit", pady=1, font= ButtonFont,command=lambda :root.quit())
     Exit.place(relx=0.45,rely=0.92,relwidth=0.10)
