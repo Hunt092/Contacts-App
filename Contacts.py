@@ -74,8 +74,16 @@ def TakeEmail(emails):
     except:
         return ["no email"]
 
-def SaveContact(Contact):
-    ContactList.append(Contact)
+def SaveContact(Contact,Index=None):
+    print(Index)
+    if Index==None:
+        print("Creating New contact")
+        ContactList.append(Contact)
+    else:
+        print("Updating cOntact")
+        ContactList.pop(Index)
+        ContactList.insert(Index,Contact)
+    print("Saving....")
     with open("ContactList.json", 'w') as f:
         json.dump(ContactList,f)
 
@@ -104,9 +112,14 @@ def EditContactPages(canvas1,Title,Index):
     else:    
         OpenNewPage(canvas1,Title,Modificationpage,Index)
 
-# def UpdateContact(Index,Name,Number,Address,Emails):
-#     ContactList[Index].update(Name.get().strip():{"Number":Number.get().strip().split(',')},
-#     {"Address":Address.get().strip()},{"Email:"Emails.get().strip().split(',')})
+def UpdateContact(Index,Name,Number,Address,Email,TITLE,CANVAS):
+    name,numbers,addresses,emails = GetData(Name.get().strip(),Number.get().strip(),Address.get().strip(),Email.get().strip())
+    node=Create(name,numbers,addresses,emails)
+    SaveContact(node,Index)
+
+    OpenNewPage(CANVAS,TITLE,OpenScreen)
+
+
 #--------------------------------------#
 
 
@@ -221,8 +234,8 @@ def Modificationpage(Index):
     Emails.insert('end',ContactList[Index][list(ContactList[Index])[0]]['Email'])
     Emails.place(relx=0.02,rely=0.7) 
 
-    Submit= tk.Button(Canvas,text="Update",font=ButtonFont,padx=30,pady=10,bg=None)
-                        #command= lambda : UpdateContact(Index,Name,Number,Address,Emails))
+    Submit= tk.Button(Canvas,text="Update",font=ButtonFont,padx=30,pady=10,bg=None,
+                        command= lambda : UpdateContact(Index,Name,Number,Address,Emails,Title,Canvas))
     Submit.place(relx=0.7,rely=0.8)
 
     Back =  tk.Button(Canvas,text="Back",padx=20,font=ButtonFont,
@@ -254,5 +267,4 @@ if __name__ =='__main__':
     root = tk.Tk()
     root.title("Contacts")
     OpenScreen()
-    
     root.mainloop()
