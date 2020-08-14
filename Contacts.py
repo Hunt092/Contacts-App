@@ -36,6 +36,8 @@ def MakeContact(Name,Numbers,Addresses,Emails):
         Numbers.delete(0, 'end')
         Addresses.delete(0, 'end')
         Emails.delete(0, 'end')
+        if emails==['']:
+            emails=[]
         node=Create(name,numbers,addresses,emails)
         SaveContact(node)
     except:
@@ -63,7 +65,7 @@ def TakeNumber(numbers):
 def TakeAddress(addresses):
     """ Returns a list of Addresses"""
     try:
-        return [address for address in addresses.split('/')]
+        return [address for address in addresses.split()]
     except:
         return ["no address"]
 
@@ -75,7 +77,7 @@ def TakeEmail(emails):
         return ["no email"]
 
 def SaveContact(Contact,Index=None):
-    print(Index)
+    
     if Index==None:
         print("Creating New contact")
         ContactList.append(Contact)
@@ -101,25 +103,38 @@ def OpenNewPage(canvasname,Titlename,NextpageName=None,ContactIndex=None):
             pass
 
 def GetIndex(Listname):
+
     try:
         return Listname.curselection()[0]
     except:
         return None
 
 def EditContactPages(canvas1,Title,Index):
+
     if Index==None:
         OpenNewPage(canvas1,Title,SearchContactPage)
     else:    
         OpenNewPage(canvas1,Title,Modificationpage,Index)
 
 def UpdateContact(Index,Name,Number,Address,Email,TITLE,CANVAS):
+
     name,numbers,addresses,emails = GetData(Name.get().strip(),Number.get().strip(),Address.get().strip(),Email.get().strip())
+    if len(addresses)<1:
+        addresses=[]
+    print(addresses,emails)
     node=Create(name,numbers,addresses,emails)
     SaveContact(node,Index)
-
     OpenNewPage(CANVAS,TITLE,OpenScreen)
 
-
+def FindContact(Canvas,Title,Search):
+    Searchterm=Search.get()
+    for Index,Contact in enumerate(ContactList):
+        for Name in Contact:
+            if Name==Searchterm.capitalize() or Name==Searchterm :
+                OpenNewPage(Canvas,Title,Modificationpage,Index)
+                break
+    try:Search.insert("end","No Contact found")
+    except:pass
 #--------------------------------------#
 
 
@@ -184,7 +199,7 @@ def OpenScreen():
     Edit.place(relx=0.725, rely=0.8,relwidth=0.25)
 
     Exit = tk.Button(canvas1,text="Exit", pady=1, font= ButtonFont,command=lambda :root.quit())
-    Exit.place(relx=0.45,rely=0.9,relwidth=0.10)
+    Exit.place(relx=0.45,rely=0.92,relwidth=0.10)
 
     scrollbar = tk.Scrollbar(frame)
     scrollbar.pack( side = 'right', fill = 'y' )
@@ -256,7 +271,7 @@ def SearchContactPage():
     Search.place(relx=0.25 , rely=0.5)
     
     SearchButton = tk.Button(Canvas,text="Edit a Contact", padx =30 , pady=15, 
-                    font= ButtonFont,)
+                    font= ButtonFont,command=lambda: FindContact(Canvas,Title,Search))
     SearchButton.place(relx=0.38,rely=0.6)
     
     Back =  tk.Button(Canvas,text="Back",padx=20,font=ButtonFont, command = lambda : OpenNewPage(Canvas,Title,OpenScreen))
